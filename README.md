@@ -12,3 +12,4 @@ To use it, type "tabs" and then hit tab.  After that, type:
 <LI><b>list</b> : will popup and alert and send to the console a list of currently saved tab names.</LI>
 </UL>
 
+Installation link: https://chrome.google.com/webstore/detail/haapmlphlfjgacjdhnmbnpddnmbamgai/
