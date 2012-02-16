@@ -1,0 +1,95 @@
+<script>
+var newTabs = new Array();
+var _text = null;
+var _loading = false;
+
+	
+chrome.omnibox.onInputEntered.addListener(
+  function(text) {
+	if(text.indexOf('load') >= 0 || text.split(" ").length == 1) {
+		console.log('opening');
+		name = text;
+		if(text.split(" ").length > 1) {
+			name = text.split(" ")[1];
+		}
+		tabs = localStorage[name].split(",");
+		clearTabs();
+		for(var i = 0; i < tabs.length; i++) {
+			chrome.tabs.create({'url':tabs[i]});
+		}
+		chrome.tabs.getAllInWindow(null,function(tabs) {
+			chrome.tabs.update(tabs[0].id, {selected: true});
+		});
+	}
+	
+	if(text.indexOf('save') >= 0) {
+		console.log('saving');
+		newTabs = new Array();
+		if(text.split(" ").length > 2) {
+			chrome.tabs.executeScript(null, {code: "alert('Spaces are not allowed in tab names')"});
+			return;
+		}
+
+		chrome.tabs.getAllInWindow(null,function(tabs) {
+			for(var x = 0; x < tabs.length; x++) {
+				newTabs[newTabs.length] = tabs[x].url;
+				console.log(tabs[x].url);
+			}
+			console.log(newTabs[0]);
+			console.log(newTabs.join(","));
+			localStorage[text.split(" ")[1]] = newTabs.join(",");
+		});	
+	}
+
+	if(text.indexOf('delete') >= 0) {
+		console.log('deleting');
+		if(text.indexOf(',') < 0) {
+			delete localStorage[text.split(" ")[1]];
+		} else {
+			var names = text.split(" ")[1].split(",");
+			for(var x = 0; x < names.length; x++) {
+				delete localStorage[names[x]];
+			}
+		}
+			
+	}
+
+
+	if(text.indexOf('list') >= 0) {
+		list1 = '';
+		list2 = '';
+		for(var x = 0; x < localStorage.length; x++) {
+			list1 += localStorage.key(x) + '\\n';
+			list2 += localStorage.key(x) + ',';
+		}
+		list2 = list2.substring(0,list2.length-1);
+		chrome.tabs.executeScript(null, {code: "alert('"+list1+"');console.log('"+list2+"');"});
+	}
+
+
+    }	
+    );
+    
+function clearTabs() {
+	chrome.tabs.getAllInWindow(null,function(tabs) {
+			for(var x = 0; x < tabs.length; x++) {
+				chrome.tabs.remove(tabs[x].id);
+			}
+		});		
+
+}
+
+function setTab(tab) {
+	console.log('Search Tab created '+tab.id);
+	_searchTab = tab;
+	console.log(_searchTab);
+}   
+   
+function doSearch() {
+	console.log('Injecting code');
+	chrome.tabs.insertCSS(_searchTab.id,{'file':'search.css'});
+	chrome.tabs.executeScript(_searchTab.id,{"code":"var searchText = '"+_text+"';"});
+    chrome.tabs.executeScript(_searchTab.id,{"file":"code.js"});
+    _text = null;
+}
+</script>

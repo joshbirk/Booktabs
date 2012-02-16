@@ -1,0 +1,8 @@
+{
+  "name": "Booktabs",
+  "description" : "Type 'tabs', then tab, then: save {name} | {name} or load {name} | list | delete {name} or delete {name1},{name2}",
+  "version": "1.0",
+  "background_page": "index.html",
+  "omnibox": { "keyword" : "tabs" },
+  "permissions":["tabs","http://*/","https://*/"]
+}
