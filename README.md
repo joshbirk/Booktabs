@@ -1,7 +1,7 @@
 <h1>Booktabs</h1>
 Booktabs is a very simple Chrome extension which will save and load specific tabs by putting commands into the Omnibox/location bar.
 
-To use it, type "tabs" and then hit tab.  After that:
+To use it, type "tabs" and then hit tab.  After that, type:
 
 <UL>
 <LI><b>save</b> {tabname} : will save the currently loaded tabs as {tabname}.</LI>
